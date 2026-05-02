@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mithai Mahal — Admin Panel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:#f5f5f5;
+  color:#333;
+}
+
+/* LOGIN */
+
+.login-screen{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#1a1a1a,#3d1f00);
+}
+
+.login-box{
+  width:100%;
+  max-width:400px;
+  background:#fff;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.3);
+}
+
+.logo{
+  text-align:center;
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.logo span{
+  color:#d4a017;
+}
+
+.sub{
+  text-align:center;
+  color:#888;
+  margin-bottom:30px;
+}
+
+.login-box input{
+  width:100%;
+  padding:14px;
+  margin-bottom:15px;
+  border:2px solid #eee;
+  border-radius:10px;
+  outline:none;
+  font-family:inherit;
+}
+
+.login-box input:focus{
+  border-color:#b22222;
+}
+
+.login-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(135deg,#b22222,#d4a017);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.login-error{
+  color:red;
+  font-size:13px;
+  margin-bottom:10px;
+  display:none;
+}
+
+/* ADMIN */
+
+.admin-screen{
+  display:none;
+}
+
+.admin-screen.active{
+  display:block;
+}
+
+.admin-nav{
+  background:#1a1a1a;
+  color:#fff;
+  padding:16px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.admin-nav button{
+  padding:10px 18px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+  background:#333;
+  color:#fff;
+}
+
+.stats-bar{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  padding:30px;
+}
+
+.stat-card{
+  background:#fff;
+  padding:24px;
+  border-radius:16px;
+  box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.stat-card h2{
+  font-size:30px;
+  margin-bottom:5px;
+}
+
+.controls{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 30px 20px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.filter-btns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.filter-btns button{
+  padding:10px 18px;
+  border:none;
+  border-radius:20px;
+  background:#fff;
+  cursor:pointer;
+  border:2px solid #ddd;
+}
+
+.filter-btns button.active{
+  background:#b22222;
+  color:#fff;
+  border-color:#b22222;
+}
+
+/* TABLE */
+
+.orders-wrapper{
+  padding:0 30px 40px;
+  overflow-x:auto;
+}
+
+.orders-table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.orders-table th{
+  background:#1a1a1a;
+  color:#fff;
+  padding:14px;
+  text-align:left;
+}
+
+.orders-table td{
+  padding:14px;
+  border-bottom:1px solid #eee;
+}
+
+.status-badge{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.pending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.approved{
+  background:#d4edda;
+  color:#155724;
+}
+
+.processing{
+  background:#d1ecf1;
+  color:#0c5460;
+}
+
+.delivered{
+  background:#d4edda;
+  color:#155724;
+}
+
+.cancelled{
+  background:#f8d7da;
+  color:#721c24;
+}
+
+.action-btns{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.action-btns button{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.btn-view{
+  background:#eee;
+}
+
+.btn-approve{
+  background:#28a745;
+  color:#fff;
+}
+
+.btn-process{
+  background:#17a2b8;
+  color:#fff;
+}
+
+.btn-deliver{
+  background:#28a745;
+  color:#fff;
+}
+
+.btn-cancel{
+  background:#dc3545;
+  color:#fff;
+}
+
+.btn-delete{
+  background:#000;
+  color:#fff;
+}
+
+.no-orders{
+  padding:40px;
+  text-align:center;
+}
+
+@media(max-width:768px){
+
+  .admin-nav{
+    padding:16px;
+  }
+
+  .stats-bar{
+    padding:16px;
+  }
+
+  .orders-wrapper{
+    padding:16px;
+  }
+
+  .controls{
+    padding:16px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login-screen" id="loginScreen">
+
+  <div class="login-box">
+
+    <div class="logo">
+      Mithai <span>Mahal</span>
+    </div>
+
+    <div class="sub">
+      Admin Dashboard
+    </div>
+
+    <div class="login-error" id="loginError">
+      Invalid Username or Password
+    </div>
+
+    <input type="text" id="loginUser" placeholder="Username">
+
+    <input type="password" id="loginPass" placeholder="Password">
+
+    <button class="login-btn" onclick="doLogin()">
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+<!-- ADMIN -->
+
+<div class="admin-screen" id="adminScreen">
+
+  <div class="admin-nav">
+
+    <div class="logo">
+      Mithai <span>Mahal</span>
+    </div>
+
+    <button onclick="doLogout()">
+      Logout
+    </button>
+
+  </div>
+
+  <!-- STATS -->
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <!-- FILTERS -->
+
+  <div class="controls">
+
+    <h2>Orders</h2>
+
+    <div class="filter-btns">
+
+      <button class="active" onclick="filterOrders('all',this)">
+        All
+      </button>
+
+      <button onclick="filterOrders('Pending',this)">
+        Pending
+      </button>
+
+      <button onclick="filterOrders('Approved',this)">
+        Approved
+      </button>
+
+      <button onclick="filterOrders('Processing',this)">
+        Processing
+      </button>
+
+      <button onclick="filterOrders('Delivered',this)">
+        Delivered
+      </button>
+
+      <button onclick="filterOrders('Cancelled',this)">
+        Cancelled
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- TABLE -->
+
+  <div class="orders-wrapper">
+
+    <table class="orders-table">
+
+      <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="ordersBody"></tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<script>
+
+/* LOGIN */
+
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "12345";
+
+let currentFilter = "all";
+
+function doLogin(){
+
+  const user = document.getElementById("loginUser").value;
+  const pass = document.getElementById("loginPass").value;
+
+  if(user === ADMIN_USER && pass === ADMIN_PASS){
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    document.getElementById("adminScreen").classList.add("active");
+
+    loadDashboard();
+
+  }else{
+
+    document.getElementById("loginError").style.display = "block";
+
+  }
+
+}
+
+function doLogout(){
+
+  document.getElementById("adminScreen").classList.remove("active");
+
+  document.getElementById("loginScreen").style.display = "flex";
+
+}
+
+/* DEMO DATA */
+
+if(!localStorage.getItem("mithaiOrders")){
+
+  const sampleOrders = [
+
+    {
+      id:"ORD001",
+      date:"2026-05-02",
+      customer:{
+        name:"Rahul",
+        phone:"9876543210"
+      },
+      items:[
+        {name:"Rasgulla",qty:2},
+        {name:"Ladoo",qty:1}
+      ],
+      total:450,
+      status:"Pending"
+    },
+
+    {
+      id:"ORD002",
+      date:"2026-05-01",
+      customer:{
+        name:"Priya",
+        phone:"9876500000"
+      },
+      items:[
+        {name:"Kaju Katli",qty:3}
+      ],
+      total:900,
+      status:"Approved"
+    }
+
+  ];
+
+  localStorage.setItem("mithaiOrders",JSON.stringify(sampleOrders));
+
+}
+
+/* DASHBOARD */
+
+function loadDashboard(){
+
+  renderStats();
+
+  renderOrders();
+
+}
+
+/* STATS */
+
+function renderStats(){
+
+  const orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+  const revenue = orders
+  .filter(o => o.status !== "Cancelled")
+  .reduce((sum,o)=>sum + o.total,0);
+
+  document.getElementById("statsBar").innerHTML = `
+
+    <div class="stat-card">
+      <h2>${orders.length}</h2>
+      <p>Total Orders</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>₹${revenue}</h2>
+      <p>Total Revenue</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>${orders.filter(o=>o.status==="Pending").length}</h2>
+      <p>Pending Orders</p>
+    </div>
+
+    <div class="stat-card">
+      <h2>${orders.filter(o=>o.status==="Delivered").length}</h2>
+      <p>Delivered Orders</p>
+    </div>
+
+  `;
+
+}
+
+/* RENDER ORDERS */
+
+function renderOrders(){
+
+  let orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+  if(currentFilter !== "all"){
+
+    orders = orders.filter(o => o.status === currentFilter);
+
+  }
+
+  const tbody = document.getElementById("ordersBody");
+
+  if(orders.length === 0){
+
+    tbody.innerHTML = `
+    <tr>
+      <td colspan="7">
+        <div class="no-orders">
+          No Orders Found
+        </div>
+      </td>
+    </tr>
+    `;
+
+    return;
+
+  }
+
+  tbody.innerHTML = orders.map(o => {
+
+    let buttons = `
+
+    <button class="btn-view"
+    onclick="viewOrder('${o.id}')">
+    View
+    </button>
+
+    <button class="btn-view"
+    onclick="editOrder('${o.id}')">
+    Edit
+    </button>
+    `;
+
+    if(o.status === "Pending"){
+
+      buttons += `
+      <button class="btn-approve"
+      onclick="updateStatus('${o.id}','Approved')">
+      Approve
+      </button>
+
+      <button class="btn-cancel"
+      onclick="updateStatus('${o.id}','Cancelled')">
+      Cancel
+      </button>
+      `;
+
+    }
+
+    else if(o.status === "Approved"){
+
+      buttons += `
+      <button class="btn-process"
+      onclick="updateStatus('${o.id}','Processing')">
+      Process
+      </button>
+      `;
+
+    }
+
+    else if(o.status === "Processing"){
+
+      buttons += `
+      <button class="btn-deliver"
+      onclick="updateStatus('${o.id}','Delivered')">
+      Deliver
+      </button>
+      `;
+
+    }
+
+    buttons += `
+    <button class="btn-delete"
+    onclick="deleteOrder('${o.id}')">
+    Delete
+    </button>
+    `;
+
+    return `
+
+    <tr>
+
+      <td>${o.id}</td>
+
+      <td>${o.date}</td>
+
+      <td>
+        <strong>${o.customer.name}</strong>
+        <br>
+        ${o.customer.phone}
+      </td>
+
+      <td>
+        ${o.items.map(i => `${i.name} x${i.qty}`).join("<br>")}
+      </td>
+
+      <td>
+        ₹${o.total}
+      </td>
+
+      <td>
+        <span class="status-badge ${o.status.toLowerCase()}">
+          ${o.status}
+        </span>
+      </td>
+
+      <td>
+        <div class="action-btns">
+          ${buttons}
+        </div>
+      </td>
+
+    </tr>
+
+    `;
+
+  }).join("");
+
+}
+
+/* FILTER */
+
+function filterOrders(status,btn){
+
+  currentFilter = status;
+
+  document.querySelectorAll(".filter-btns button")
+  .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  renderOrders();
+
+}
+
+/* UPDATE STATUS */
+
+function updateStatus(id,newStatus){
+
+  let orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+  const order = orders.find(o => o.id === id);
+
+  if(order){
+
+    order.status = newStatus;
+
+  }
+
+  localStorage.setItem("mithaiOrders",JSON.stringify(orders));
+
+  loadDashboard();
+
+}
+
+/* VIEW */
+
+function viewOrder(id){
+
+  const orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+  const order = orders.find(o => o.id === id);
+
+  alert(
+`
+Order ID: ${order.id}
+
+Customer: ${order.customer.name}
+
+Phone: ${order.customer.phone}
+
+Total: ₹${order.total}
+
+Status: ${order.status}
+`
+  );
+
+}
+
+/* EDIT */
+
+function editOrder(id){
+
+  let orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+  const order = orders.find(o => o.id === id);
+
+  if(!order) return;
+
+  const newName = prompt("Customer Name",order.customer.name);
+
+  if(newName !== null){
+
+    order.customer.name = newName;
+
+  }
+
+  const newPhone = prompt("Phone Number",order.customer.phone);
+
+  if(newPhone !== null){
+
+    order.customer.phone = newPhone;
+
+  }
+
+  localStorage.setItem("mithaiOrders",JSON.stringify(orders));
+
+  loadDashboard();
+
+}
+
+/* DELETE */
+
+function deleteOrder(id){
+
+  if(confirm("Delete this order?")){
+
+    let orders = JSON.parse(localStorage.getItem("mithaiOrders")) || [];
+
+    orders = orders.filter(o => o.id !== id);
+
+    localStorage.setItem("mithaiOrders",JSON.stringify(orders));
+
+    loadDashboard();
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
